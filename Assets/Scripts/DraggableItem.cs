@@ -177,6 +177,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
             // Фиксируем масштаб
             newItem.GetComponent<RectTransform>().localScale = Vector3.one;
+
+            // Воспроизводим звук слияния
+            PlayMergeSound();
         }
 
         StartCoroutine(DestroyAfterDelay(other));

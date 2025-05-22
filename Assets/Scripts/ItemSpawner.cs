@@ -33,6 +33,7 @@ public class ItemSpawner : MonoBehaviour
 
     public void TrySpawnItem()
     {
+        Debug.Log("Спавн вызван!");
         if (isSpawning || !gameManager.CanAfford(currentPrice)) return;
         StartCoroutine(SpawnWithCooldown());
     }
