@@ -1,31 +1,137 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
 public class ItemSpawner : MonoBehaviour
 {
+    [Header("Настройки спавна")]
     public GameObject itemPrefab;
     public Transform spawnParent;
     public RectTransform spawnArea;
+    public Button spawnButton;
 
-    public void SpawnItem()
+    [Header("Настройки цены")]
+    public TextMeshProUGUI priceText;
+    public float basePrice = 100f;
+    public float priceIncreaseMultiplier = 1.15f;
+
+    private float currentPrice;
+    private GameManager gameManager;
+    private bool isSpawning = false;
+
+    private void Start()
     {
+        gameManager = GameManager.Instance;
+        currentPrice = basePrice;
 
+        // Очистка и назначение обработчика
+        spawnButton.onClick.RemoveAllListeners();
+        spawnButton.onClick.AddListener(TrySpawnItem);
 
+        UpdatePriceDisplay();
+    }
+
+    public void TrySpawnItem()
+    {
+        if (isSpawning || !gameManager.CanAfford(currentPrice)) return;
+        StartCoroutine(SpawnWithCooldown());
+    }
+
+    private IEnumerator SpawnWithCooldown()
+    {
+        isSpawning = true;
+
+        if (gameManager.TrySpendMoney(currentPrice))
+        {
+            SpawnItem();
+            currentPrice *= priceIncreaseMultiplier;
+            UpdatePriceDisplay();
+        }
+        else
+        {
+            StartCoroutine(ShakeButton());
+        }
+
+        yield return new WaitForSeconds(0.2f);
+        isSpawning = false;
+    }
+
+    // В ItemSpawner.cs измените метод SpawnItem:
+    private void SpawnItem()
+    {
+        Vector2 randomPos = GetRandomPosition();
+        GameObject newItem = Instantiate(itemPrefab, spawnArea);
+
+        // Устанавливаем стандартный масштаб
+        newItem.GetComponent<RectTransform>().localScale = Vector3.one;
+        newItem.GetComponent<RectTransform>().anchoredPosition = randomPos;
+
+        // Добавляем компонент для заработка
+        if (!newItem.TryGetComponent<MonetizableItem>(out _))
+        {
+            newItem.AddComponent<MonetizableItem>().baseReward = 1f;
+        }
+    }
+
+    private Vector2 GetRandomPosition()
+    {
         RectTransform prefabRect = itemPrefab.GetComponent<RectTransform>();
-        Vector2 itemSize = prefabRect.sizeDelta;
+        Vector2 spawnSize = spawnArea.rect.size;
 
-        Vector2 areaSize = spawnArea.rect.size;
-
-        float maxX = (areaSize.x - itemSize.x) / 2f;
-        float maxY = (areaSize.y - itemSize.y) / 2.5f;
-
-        Vector2 randomPos = new Vector2(
-            Random.Range(-maxX, maxX),
-            Random.Range(-maxY, maxY)
+        // Учитываем pivot префаба
+        Vector2 pivotOffset = new Vector2(
+            prefabRect.pivot.x * prefabRect.rect.width,
+            prefabRect.pivot.y * prefabRect.rect.height
         );
 
-        GameObject newItem = Instantiate(itemPrefab, spawnArea);
-        newItem.GetComponent<RectTransform>().anchoredPosition = randomPos;
+        return new Vector2(
+            Random.Range(-spawnSize.x / 2 + pivotOffset.x, spawnSize.x / 2 - pivotOffset.x),
+            Random.Range(-spawnSize.y / 2 + pivotOffset.y, spawnSize.y / 2 - pivotOffset.y)
+        );
+    }
+
+    public void UpdateButtonState()
+    {
+        UpdatePriceDisplay();
+    }
+
+    public void UpdatePriceDisplay()
+    {
+        // Всегда обновляем текст цены
+        priceText.text = $"{currentPrice:F1}$";
+
+        // Всегда обновляем состояние кнопки
+        spawnButton.interactable = GameManager.Instance.CanAfford(currentPrice);
+    }
+
+    private IEnumerator ShakeButton()
+    {
+        // Анимация тряски кнопки
+        Vector3 originalPos = spawnButton.transform.position;
+        float duration = 0.5f;
+        float magnitude = 10f;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            spawnButton.transform.position = originalPos + new Vector3(x, y, 0);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        spawnButton.transform.position = originalPos;
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnMoneyChanged += UpdatePriceDisplay;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnMoneyChanged -= UpdatePriceDisplay;
     }
 }

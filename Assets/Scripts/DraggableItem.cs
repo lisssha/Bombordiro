@@ -164,14 +164,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void MergeItems(GameObject other)
     {
-        Debug.Log($"Merging {gameObject.name} with {other.name}");
-
         Vector3 spawnPos = (transform.position + other.transform.position) / 2f;
 
-        // Воспроизведение звука
-        PlayMergeSound();
-
-        // Создание нового объекта
         if (currentStage.nextStage != null)
         {
             var newItem = Instantiate(
@@ -181,13 +175,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 canvas.transform
             );
 
-            Debug.Log($"Created new {newItem.name}");
+            // Фиксируем масштаб
+            newItem.GetComponent<RectTransform>().localScale = Vector3.one;
         }
 
-        // Уничтожение объектов
         StartCoroutine(DestroyAfterDelay(other));
     }
-
     private System.Collections.IEnumerator DestroyAfterDelay(GameObject other)
     {
         yield return new WaitForSeconds(0.05f);
@@ -224,5 +217,36 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             transform.position,
             mergeDistance * (canvas != null ? canvas.scaleFactor : 1)
         );
+    }
+
+    [Header("Доход")]
+    public float clickReward = 1f; // Базовая награда за клик
+    public float rewardMultiplier = 1.5f; // Множитель для эволюции
+
+    // Добавляем в конец класса:
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        float reward = clickReward * Mathf.Pow(rewardMultiplier, GetEvolutionLevel());
+        GameManager.Instance.AddMoney(reward);
+
+        // Визуальная обратная связь
+        ShowFloatingText($"+{reward:F1}$");
+    }
+
+    private int GetEvolutionLevel()
+    {
+        // Возвращает уровень эволюции (0 для акулы, 1 для крокодила и т.д.)
+        if (evolutionData == null) return 0;
+        for (int i = 0; i < evolutionData.stages.Length; i++)
+        {
+            if (evolutionData.stages[i].prefab.name == gameObject.name.Replace("(Clone)", ""))
+                return i;
+        }
+        return 0;
+    }
+
+    private void ShowFloatingText(string text)
+    {
+        // Реализация всплывающего текста (можно использовать TextMeshPro)
     }
 }

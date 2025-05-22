@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2122960719603618260}
   - component: {fileID: 7315827881662622650}
   - component: {fileID: -521563143727213348}
+  - component: {fileID: 8083618155120744922}
   m_Layer: 5
   m_Name: govnoed
   m_TagString: Item
@@ -123,6 +124,8 @@ MonoBehaviour:
   dropSound: {fileID: 0}
   evolutionData: {fileID: 11400000, guid: 1a8077c4b64f8c44fbe4d91990607664, type: 2}
   mergeDistance: 100
+  clickReward: 1
+  rewardMultiplier: 1.5
 --- !u!61 &7315827881662622650
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -179,7 +182,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -264,3 +267,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8083618155120744922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121858748887579638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c002d1c3ee363440881784aced7a5fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseReward: 20
+  rewardMultiplier: 1.1
