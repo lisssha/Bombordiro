@@ -28,6 +28,11 @@ public class ItemSpawner : MonoBehaviour
         spawnButton.onClick.RemoveAllListeners();
         spawnButton.onClick.AddListener(TrySpawnItem);
 
+        if (priceText == null)
+        {
+            priceText = GetComponentInChildren<TextMeshProUGUI>();
+        }
+
         UpdatePriceDisplay();
     }
 
@@ -96,15 +101,21 @@ public class ItemSpawner : MonoBehaviour
         UpdatePriceDisplay();
     }
 
-    public void UpdatePriceDisplay()
+    
+    public void ForceUpdatePrice()
     {
-        // Всегда обновляем текст цены
-        priceText.text = $"{currentPrice:F1}$";
-
-        // Всегда обновляем состояние кнопки
-        spawnButton.interactable = GameManager.Instance.CanAfford(currentPrice);
+        UpdatePriceDisplay();
     }
 
+    public void UpdatePriceDisplay()
+    {
+        // Всегда обновляем текст и состояние кнопки
+        priceText.text = $"{currentPrice:F1}$";
+        spawnButton.interactable = GameManager.Instance.CanAfford(currentPrice);
+
+        // Добавьте лог для отладки
+        Debug.Log($"Price updated: {currentPrice}");
+    }
     private IEnumerator ShakeButton()
     {
         // Анимация тряски кнопки

@@ -1056,7 +1056,6 @@ GameObject:
   - component: {fileID: 1446423830}
   - component: {fileID: 1446423829}
   - component: {fileID: 1446423828}
-  - component: {fileID: 1446423831}
   m_Layer: 5
   m_Name: "BuyKirie\u0448\u043A\u0438Button"
   m_TagString: Untagged
@@ -1177,25 +1176,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446423826}
   m_CullTransparentMesh: 1
---- !u!114 &1446423831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446423826}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94aafbf23d95d2e4ab7a24770f5db6c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 9121858748887579638, guid: 4e16fbd2017d6de46af4d9261f647234, type: 3}
-  spawnParent: {fileID: 0}
-  spawnArea: {fileID: 514266947}
-  spawnButton: {fileID: 1446423828}
-  priceText: {fileID: 1247683565}
-  basePrice: 100
-  priceIncreaseMultiplier: 1.15
 --- !u!1 &1972327499
 GameObject:
   m_ObjectHideFlags: 0
