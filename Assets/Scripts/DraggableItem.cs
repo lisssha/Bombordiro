@@ -2,60 +2,106 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(CanvasGroup))]
+[RequireComponent(typeof(Item))]
+[RequireComponent(typeof(BoxCollider2D))] // Добавляем обязательный коллайдер
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    // Компоненты
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Canvas canvas;
-
-    [Header("Ограничение области")]
-    public RectTransform boundaryArea; 
-
-    [Header("Аудио(не делала)")]
-    public AudioClip pickupSound;
-    public AudioClip dropSound;
     private AudioSource audioSource;
+    private BoxCollider2D boxCollider;
 
-    [Header("Визуальные эффекты")]
+    [Header("Drag Settings")]
+    public RectTransform boundaryArea;
     public float scaleOnDrag = 1.2f;
     private Vector3 originalScale;
 
+    [Header("Audio Settings")]
+    public AudioClip pickupSound;
+    public AudioClip dropSound;
+
+    [Header("Merge Settings")]
+    public EvolutionData evolutionData;
+    public float mergeDistance = 100f;
+    private EvolutionData.EvolutionStage currentStage;
+
     private void Awake()
     {
+        // Инициализация компонентов
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
         audioSource = GetComponent<AudioSource>();
+        boxCollider = GetComponent<BoxCollider2D>();
+
+        // Настройка AudioSource
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+        }
+
+        // Настройка коллайдера
+        if (boxCollider != null)
+        {
+            boxCollider.isTrigger = false;
+            boxCollider.size = rectTransform.rect.size;
+        }
+
         originalScale = transform.localScale;
     }
 
-
-    void Start()
+    private void Start()
     {
+        // Поиск границ
         if (boundaryArea == null)
         {
-            GameObject boundaryGO = GameObject.Find("SpawnArena");
-            if (boundaryGO != null)
-            {
-                boundaryArea = boundaryGO.GetComponent<RectTransform>();
-            }
+            boundaryArea = GameObject.Find("SpawnArena")?.GetComponent<RectTransform>();
+        }
+
+        // Поиск текущей стадии эволюции
+        FindCurrentEvolutionStage();
+    }
+
+    private void FindCurrentEvolutionStage()
+    {
+        if (evolutionData != null)
+        {
+            currentStage = evolutionData.GetStageForPrefab(gameObject);
         }
     }
 
+    #region Drag Handlers
     public void OnBeginDrag(PointerEventData eventData)
     {
         canvasGroup.alpha = 0.7f;
         canvasGroup.blocksRaycasts = false;
-
         transform.localScale = originalScale * scaleOnDrag;
-
-        if (audioSource && pickupSound)
-            audioSource.PlayOneShot(pickupSound);
+        PlaySound(pickupSound);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        ClampToBoundary();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        canvasGroup.alpha = 1f;
+        canvasGroup.blocksRaycasts = true;
+        transform.localScale = originalScale;
+        PlaySound(dropSound);
+        TryMergeItems();
+    }
+    #endregion
+
+    private void ClampToBoundary()
+    {
+        if (boundaryArea == null) return;
 
         Vector3[] itemCorners = new Vector3[4];
         Vector3[] boundaryCorners = new Vector3[4];
@@ -80,41 +126,103 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         rectTransform.position += offset;
     }
-    [Header("какой префаб будет если соеденить")]
-    public GameObject resultPrefab; 
-    public void OnEndDrag(PointerEventData eventData)
+
+    private void TryMergeItems()
     {
-        canvasGroup.alpha = 1f;
-        canvasGroup.blocksRaycasts = true;
-        transform.localScale = originalScale;
-
-        if (audioSource && dropSound)
-            audioSource.PlayOneShot(dropSound);
-
         Item thisItem = GetComponent<Item>();
-        if (thisItem == null) return;
-
-        foreach (var other in GameObject.FindGameObjectsWithTag("Item"))
+        if (thisItem == null)
         {
-            if (other == this.gameObject) continue;
+            Debug.LogWarning("Item component missing!");
+            return;
+        }
 
-            float distance = Vector3.Distance(transform.position, other.transform.position);
-            if (distance < 100f) // это на каком расстоянии элементы и если онр меньше то они стакаются
+        if (currentStage == null)
+        {
+            Debug.LogWarning("Evolution stage not found!");
+            FindCurrentEvolutionStage(); // Попробуем найти снова
+            if (currentStage == null) return;
+        }
+
+        // Ищем все коллайдеры в радиусе
+        Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(
+            transform.position,
+            mergeDistance * canvas.scaleFactor // Учитываем масштаб канваса
+        );
+
+        foreach (var collider in nearbyColliders)
+        {
+            if (collider.gameObject == gameObject) continue;
+
+            Item otherItem = collider.GetComponent<Item>();
+            if (otherItem != null && otherItem.itemName == thisItem.itemName)
             {
-                Item otherItem = other.GetComponent<Item>();
-                if (otherItem != null && otherItem.itemName == thisItem.itemName)
-                {
-                    
-                    Vector3 spawnPos = (transform.position + other.transform.position) / 2;
-                    Destroy(other);
-                    Destroy(gameObject);
-
-                    // новый объект
-                    Instantiate(resultPrefab, spawnPos, Quaternion.identity, canvas.transform);
-
-                    break;
-                }
+                MergeItems(otherItem.gameObject);
+                return; // Выходим после первого слияния
             }
         }
     }
+
+    private void MergeItems(GameObject other)
+    {
+        Debug.Log($"Merging {gameObject.name} with {other.name}");
+
+        Vector3 spawnPos = (transform.position + other.transform.position) / 2f;
+
+        // Воспроизведение звука
+        PlayMergeSound();
+
+        // Создание нового объекта
+        if (currentStage.nextStage != null)
+        {
+            var newItem = Instantiate(
+                currentStage.nextStage,
+                spawnPos,
+                Quaternion.identity,
+                canvas.transform
+            );
+
+            Debug.Log($"Created new {newItem.name}");
+        }
+
+        // Уничтожение объектов
+        StartCoroutine(DestroyAfterDelay(other));
     }
+
+    private System.Collections.IEnumerator DestroyAfterDelay(GameObject other)
+    {
+        yield return new WaitForSeconds(0.05f);
+        Destroy(other);
+        Destroy(gameObject);
+    }
+
+    private void PlayMergeSound()
+    {
+        if (currentStage.mergeSound == null) return;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySound(currentStage.mergeSound);
+        }
+        else if (audioSource != null)
+        {
+            audioSource.PlayOneShot(currentStage.mergeSound);
+        }
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(
+            transform.position,
+            mergeDistance * (canvas != null ? canvas.scaleFactor : 1)
+        );
+    }
+}
