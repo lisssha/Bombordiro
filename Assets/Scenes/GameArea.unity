@@ -202,7 +202,7 @@ MonoBehaviour:
   spawnButton: {fileID: 1446423828}
   priceText: {fileID: 1247683565}
   basePrice: 100
-  priceIncreaseMultiplier: 1.15
+  priceIncreaseMultiplier: 1.05
 --- !u!4 &313880627
 Transform:
   m_ObjectHideFlags: 0
@@ -1205,7 +1205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8758305b816a8284c84ef77d0c8304e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  money: 10000
+  money: 1000
   moneyText: {fileID: 1412375863}
 --- !u!4 &1972327501
 Transform:
