@@ -252,4 +252,33 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         // Реализация всплывающего текста (можно использовать TextMeshPro)
     }
+    public void SetEvolutionLevel(int level)
+    {
+        if (evolutionData == null)
+        {
+            Debug.LogWarning("EvolutionData не назначен!");
+            return;
+        }
+
+        if (level < 0 || level >= evolutionData.stages.Length)
+        {
+            Debug.LogWarning("Уровень эволюции вне диапазона!");
+            return;
+        }
+
+        currentStage = evolutionData.stages[level];
+
+        // Обновляем внешний вид (например, спрайт), если нужно
+        GameObject stagePrefab = currentStage.prefab;
+        if (stagePrefab != null)
+        {
+            SpriteRenderer sourceSprite = stagePrefab.GetComponent<SpriteRenderer>();
+            SpriteRenderer targetSprite = GetComponent<SpriteRenderer>();
+            if (sourceSprite != null && targetSprite != null)
+            {
+                targetSprite.sprite = sourceSprite.sprite;
+            }
+        }
+    }
+
 }
