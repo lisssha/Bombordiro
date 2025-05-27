@@ -19,3 +19,6 @@ MonoBehaviour:
   - prefab: {fileID: 9048048415596463805, guid: b7429de8ac1df5a4dacb09bf97f092f8, type: 3}
     mergeSound: {fileID: 8300000, guid: 659ad814eacbeb6478dbc57951b5e939, type: 3}
     nextStage: {fileID: 9121858748887579638, guid: efe9b2ef55c304447a5072a0d4c30111, type: 3}
+  - prefab: {fileID: 9121858748887579638, guid: efe9b2ef55c304447a5072a0d4c30111, type: 3}
+    mergeSound: {fileID: 8300000, guid: c66347df68c4c2041ab5bc64001e4163, type: 3}
+    nextStage: {fileID: 9121858748887579638, guid: 9200215ee761805459ffe3deb2b35509, type: 3}
