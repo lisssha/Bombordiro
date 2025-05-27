@@ -15,7 +15,7 @@ public class ItemSpawner : MonoBehaviour
     public float basePrice = 100f;
     public float priceIncreaseMultiplier = 1.15f;
 
-    public float currentPrice;
+    private float currentPrice;
     private GameManager gameManager;
     private bool isSpawning = false;
 
