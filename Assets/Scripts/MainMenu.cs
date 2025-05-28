@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("GameArea");
     }
 
+
     public void BackToMenu()
     {
         SaveSystem.Instance.SaveGame();
