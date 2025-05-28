@@ -5,7 +5,8 @@ public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem Instance { get; private set; }
 
-    [SerializeField] private List<GameObject> availablePrefabs; // Список всех возможных префабов
+    [SerializeField] private List<GameObject> availablePrefabs;
+    [SerializeField] private Transform defaultParent; // Перетащите сюда SpawnArena из иерархии
 
     private void Awake()
     {
@@ -29,23 +30,22 @@ public class SaveSystem : MonoBehaviour
             prefabs = new List<SavedPrefab>()
         };
 
-        // Сохраняем только префабы с компонентом Item
         foreach (Item item in FindObjectsOfType<Item>())
         {
-            // Пропускаем сам спавнер, если он имеет компонент Item
             if (item.GetComponent<ItemSpawner>() != null) continue;
 
             saveData.prefabs.Add(new SavedPrefab
             {
                 prefabName = item.itemName,
-                position = item.transform.position,
-                rotation = item.transform.rotation.eulerAngles.z,
+                position = item.transform.localPosition, // Используем localPosition
+                rotation = item.transform.localEulerAngles.z,
                 scale = item.transform.localScale
             });
         }
 
         PlayerPrefs.SetString("GameSave", JsonUtility.ToJson(saveData));
         PlayerPrefs.Save();
+        Debug.Log("Игра сохранена");
     }
 
     public void LoadGame()
@@ -55,28 +55,44 @@ public class SaveSystem : MonoBehaviour
         string json = PlayerPrefs.GetString("GameSave");
         GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
 
-        // Восстанавливаем деньги
         GameManager.Instance.money = saveData.money;
+        FindObjectOfType<ItemSpawner>().currentPrice = saveData.currentSpawnPrice;
 
-        // Восстанавливаем префабы
+        // Очищаем старые префабы
+        foreach (Item item in FindObjectsOfType<Item>())
+        {
+            if (item.GetComponent<ItemSpawner>() == null)
+                Destroy(item.gameObject);
+        }
+
+        // Создаем новые префабы
         foreach (SavedPrefab prefabData in saveData.prefabs)
         {
             GameObject prefab = availablePrefabs.Find(p =>
                 p.GetComponent<Item>().itemName == prefabData.prefabName);
 
-            Debug.Log($"Загружаем префаб: {prefabData.prefabName}, найдено: {prefab != null}");
-
-            if (prefab != null)
+            if (prefab != null && defaultParent != null)
             {
-                Instantiate(prefab, prefabData.position,
-                    Quaternion.Euler(0, 0, prefabData.rotation));
+                GameObject instance = Instantiate(
+                    prefab,
+                    defaultParent,
+                    false
+                );
+
+                instance.transform.localPosition = prefabData.position;
+                instance.transform.localEulerAngles = new Vector3(0, 0, prefabData.rotation);
+                instance.transform.localScale = prefabData.scale;
             }
         }
-
     }
 
-    private GameObject GetPrefabByName(string name)
+    // Метод для сброса всех сохранений
+    [ContextMenu("Reset Saves")]
+    public void ResetAllSaves()
     {
-        return availablePrefabs.Find(p => p.GetComponent<Item>().itemName == name);
+        PlayerPrefs.DeleteKey("GameSave");
+        PlayerPrefs.DeleteKey("CurrentSpawnPrice");
+        PlayerPrefs.Save();
+        Debug.Log("Все сохранения сброшены!");
     }
 }

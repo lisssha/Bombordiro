@@ -203,7 +203,6 @@ MonoBehaviour:
   priceText: {fileID: 1247683565}
   basePrice: 100
   priceIncreaseMultiplier: 1.05
-  currentPrice: 0
 --- !u!4 &313880627
 Transform:
   m_ObjectHideFlags: 0
@@ -737,6 +736,7 @@ MonoBehaviour:
   - {fileID: 9121858748887579638, guid: efe9b2ef55c304447a5072a0d4c30111, type: 3}
   - {fileID: 9121858748887579638, guid: 9200215ee761805459ffe3deb2b35509, type: 3}
   - {fileID: 9121858748887579638, guid: 09582b96212748d468a55486d0090ead, type: 3}
+  defaultParent: {fileID: 514266947}
 --- !u!4 &928193917
 Transform:
   m_ObjectHideFlags: 0
