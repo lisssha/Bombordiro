@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[System.Serializable]
 public class MonetizableItem : MonoBehaviour, IPointerClickHandler
 {
     [Header("Настройки дохода")]
-    public float baseReward = 1f;
-    public float rewardMultiplier = 1.1f;
+    [SerializeField] public float baseReward = 1f;
+    [SerializeField] public float rewardMultiplier = 1.1f;
 
-    private int evolutionLevel = 0;
+    [SerializeField] private int evolutionLevel = 0;
 
     public void OnPointerClick(PointerEventData eventData)
     {

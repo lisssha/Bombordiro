@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     }
     public void BackToMenu()
     {
+        SaveSystem.Instance.SaveGame();
         SceneManager.LoadScene("Menu");
     }
     public void ExitGame()

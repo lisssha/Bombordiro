@@ -5,28 +5,29 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 [RequireComponent(typeof(Item))]
 [RequireComponent(typeof(BoxCollider2D))] // Добавляем обязательный коллайдер
+[System.Serializable]
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     // Компоненты
-    private RectTransform rectTransform;
-    private CanvasGroup canvasGroup;
-    private Canvas canvas;
-    private AudioSource audioSource;
-    private BoxCollider2D boxCollider;
+    [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private BoxCollider2D boxCollider;
 
     [Header("Drag Settings")]
-    public RectTransform boundaryArea;
-    public float scaleOnDrag = 1.2f;
-    private Vector3 originalScale;
+    [SerializeField] public RectTransform boundaryArea;
+    [SerializeField] public float scaleOnDrag = 1.2f;
+    [SerializeField] private Vector3 originalScale;
 
     [Header("Audio Settings")]
-    public AudioClip pickupSound;
-    public AudioClip dropSound;
+    [SerializeField] public AudioClip pickupSound;
+    [SerializeField] public AudioClip dropSound;
 
     [Header("Merge Settings")]
-    public EvolutionData evolutionData;
-    public float mergeDistance = 100f;
-    private EvolutionData.EvolutionStage currentStage;
+    [SerializeField] public EvolutionData evolutionData;
+    [SerializeField] public float mergeDistance = 100f;
+    [SerializeField] private EvolutionData.EvolutionStage currentStage;
 
     private void Awake()
     {
@@ -223,8 +224,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     [Header("Доход")]
-    public float clickReward = 1f; // Базовая награда за клик
-    public float rewardMultiplier = 1.5f; // Множитель для эволюции
+    [SerializeField] public float clickReward = 1f; // Базовая награда за клик
+    [SerializeField] public float rewardMultiplier = 1.5f; // Множитель для эволюции
 
     // Добавляем в конец класса:
     public void OnPointerClick(PointerEventData eventData)
