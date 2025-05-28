@@ -9,14 +9,16 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("GameArea");
     }
+
     public void BackToMenu()
     {
         SaveSystem.Instance.SaveGame();
         SceneManager.LoadScene("Menu");
     }
+
     public void ExitGame()
     {
-        Debug.Log("Выход из игры...");
+        SaveSystem.Instance.SaveGame();
         Application.Quit();
     }
 }

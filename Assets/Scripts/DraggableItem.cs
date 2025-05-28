@@ -237,7 +237,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         ShowFloatingText($"+{reward:F1}$");
     }
 
-    private int GetEvolutionLevel()
+    public int GetEvolutionLevel()
     {
         // Возвращает уровень эволюции (0 для акулы, 1 для крокодила и т.д.)
         if (evolutionData == null) return 0;

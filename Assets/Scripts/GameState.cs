@@ -13,14 +13,8 @@ public class GameState
 [System.Serializable]
 public class PrefabData
 {
-    public string name;
-    public Vector2 position;
-    public List<ComponentData> components;
-}
-
-[System.Serializable]
-public class ComponentData
-{
-    public string type;
-    public string data;
+    public string prefabName;
+    public Vector3 position;
+    public float rotation;
+    public Vector3 scale;
 }

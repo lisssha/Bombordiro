@@ -15,24 +15,21 @@ public class ItemSpawner : MonoBehaviour
     public float basePrice = 100f;
     public float priceIncreaseMultiplier = 1.15f;
 
-    public float currentPrice;
+    public float currentPrice
+    {
+        get => PlayerPrefs.GetFloat("CurrentSpawnPrice", basePrice);
+        set => PlayerPrefs.SetFloat("CurrentSpawnPrice", value);
+    }
     private GameManager gameManager;
     private bool isSpawning = false;
 
     private void Start()
     {
         gameManager = GameManager.Instance;
-        currentPrice = basePrice;
+        // currentPrice теперь загружается автоматически через свойство
 
-        // Очистка и назначение обработчика
         spawnButton.onClick.RemoveAllListeners();
         spawnButton.onClick.AddListener(TrySpawnItem);
-
-        if (priceText == null)
-        {
-            priceText = GetComponentInChildren<TextMeshProUGUI>();
-        }
-
         UpdatePriceDisplay();
     }
 

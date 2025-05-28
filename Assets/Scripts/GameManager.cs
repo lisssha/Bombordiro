@@ -4,13 +4,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class GameManager : MonoBehaviour
 {
     public static event System.Action OnMoneyChanged;
     public static GameManager Instance;
 
     [Header("Баланс")]
-    public float money = 500f; // Стартовые деньги
+    public float money = 1000f; // Стартовые деньги
     public TextMeshProUGUI moneyText;
 
     private void Awake()
@@ -74,63 +75,18 @@ public class GameManager : MonoBehaviour
     {
         if (SaveSystem.Instance != null)
         {
-            string saveData = PlayerPrefs.GetString("GameSave");
-            if (!string.IsNullOrEmpty(saveData))
-            {
-                GameState state = JsonUtility.FromJson<GameState>(saveData);
-                money = state.money;
-                FindObjectOfType<ItemSpawner>().currentPrice = state.spawnPrice;
-
-                if (state.prefabs != null) // Добавляем проверку на null
-                {
-                    LoadPrefabs(state.prefabs);
-                }
-            }
+            SaveSystem.Instance.LoadGame();
         }
         UpdateUI();
     }
 
-    private void LoadPrefabs(List<PrefabData> prefabsData)
+    [ContextMenu("Add Test Money")]
+    public void AddTestMoney()
     {
-        // Удаляем существующие объекты
-        Item[] existingItems = FindObjectsOfType<Item>();
-        foreach (Item item in existingItems)
-        {
-            Destroy(item.gameObject);
-        }
-
-        // Создаем сохраненные объекты
-        foreach (PrefabData prefabData in prefabsData)
-        {
-            GameObject prefab = Resources.Load<GameObject>(prefabData.name);
-            if (prefab != null)
-            {
-                GameObject instance = Instantiate(prefab, prefabData.position, Quaternion.identity);
-
-                // Восстанавливаем компоненты
-                foreach (ComponentData componentData in prefabData.components)
-                {
-                    LoadComponent(instance, componentData);
-                }
-            }
-        }
+        money = 1000f; // Установите нужную сумму
+        UpdateUI();
+        Debug.Log($"Деньги установлены: {money}");
     }
 
-    private void LoadComponent(GameObject obj, ComponentData componentData)
-    {
-        System.Type componentType = System.Type.GetType(componentData.type);
-        if (componentType != null)
-        {
-            Component component = obj.GetComponent(componentType);
-            if (component != null)
-            {
-                JsonUtility.FromJsonOverwrite(componentData.data, component);
-            }
-        }
-    }
 
-    private void OnApplicationQuit()
-    {
-
-    }
 }
