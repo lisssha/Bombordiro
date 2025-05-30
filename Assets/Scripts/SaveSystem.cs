@@ -80,6 +80,8 @@ public class SaveSystem : MonoBehaviour
         string json = PlayerPrefs.GetString("GameSave");
         GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
 
+        GameManager.Instance.money = PlayerPrefs.GetFloat("PlayerMoney", saveData.money);
+
         // Очищаем старые префабы
         ClearExistingPrefabs();
 
@@ -133,6 +135,7 @@ public class SaveSystem : MonoBehaviour
     {
         PlayerPrefs.DeleteKey("GameSave");
         PlayerPrefs.DeleteKey("CurrentSpawnPrice");
+        PlayerPrefs.DeleteKey("PlayerMoney");
         PlayerPrefs.Save();
         Debug.Log("Все сохранения сброшены!");
     }

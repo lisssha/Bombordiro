@@ -11,7 +11,18 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("Баланс")]
-    public float money = 1000f; // Стартовые деньги
+    private float _money = 1000f;
+    public float money
+    {
+        get => _money;
+        set
+        {
+            _money = value;
+            PlayerPrefs.SetFloat("PlayerMoney", value); // Автосохранение
+            UpdateUI();
+            OnMoneyChanged?.Invoke();
+        }
+    }
     public TextMeshProUGUI moneyText;
 
     private void Awake()
@@ -19,12 +30,12 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            _money = PlayerPrefs.GetFloat("PlayerMoney", 1000f); // Загрузка при старте
         }
         else
         {
             Destroy(gameObject);
         }
-
         UpdateUI();
     }
 

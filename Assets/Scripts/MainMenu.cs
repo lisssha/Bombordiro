@@ -53,4 +53,9 @@ public class MainMenu : MonoBehaviour
         SaveSystem.Instance.SaveGame();
         Application.Quit();
     }
+
+    private void OnApplicationQuit()
+    {
+        SaveSystem.Instance.SaveGame();
+    }
 }
