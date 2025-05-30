@@ -3,7 +3,7 @@ using TMPro;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -71,13 +71,19 @@ public class GameManager : MonoBehaviour
         if (moneyText != null)
             moneyText.text = $"Деньги: {money:F1}$";
     }
-    private void Start()
+    private IEnumerator Start()
     {
-        if (SaveSystem.Instance != null)
+        yield return new WaitForEndOfFrame();
+
+        // Инициализация UI и других систем
+        UpdateUI();
+
+        // Дополнительная загрузка, если нужно
+        if (SaveSystem.Instance != null &&
+            SceneManager.GetActiveScene().name == "GameArea")
         {
             SaveSystem.Instance.LoadGame();
         }
-        UpdateUI();
     }
 
     [ContextMenu("Add Test Money")]

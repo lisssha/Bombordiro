@@ -1,12 +1,16 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem Instance { get; private set; }
 
     [SerializeField] private List<GameObject> availablePrefabs;
-    [SerializeField] private Transform defaultParent; // Перетащите сюда SpawnArena из иерархии
+    [SerializeField] private string spawnParentName = "SpawnArena"; // Перетащите сюда SpawnArena из иерархии
+
+    private Transform _spawnParent;
 
     private void Awake()
     {
@@ -14,11 +18,19 @@ public class SaveSystem : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Находим родительский объект при каждой загрузке сцены
+        GameObject parentObj = GameObject.Find(spawnParentName);
+        _spawnParent = parentObj != null ? parentObj.transform : null;
     }
 
     public void SaveGame()
@@ -52,36 +64,65 @@ public class SaveSystem : MonoBehaviour
     {
         if (!PlayerPrefs.HasKey("GameSave")) return;
 
+        // Убеждаемся, что родительский объект найден
+        if (_spawnParent == null)
+        {
+            GameObject parentObj = GameObject.Find(spawnParentName);
+            _spawnParent = parentObj != null ? parentObj.transform : null;
+
+            if (_spawnParent == null)
+            {
+                Debug.LogError($"Не найден родительский объект: {spawnParentName}");
+                return;
+            }
+        }
+
         string json = PlayerPrefs.GetString("GameSave");
         GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
 
-        GameManager.Instance.money = saveData.money;
-        FindObjectOfType<ItemSpawner>().currentPrice = saveData.currentSpawnPrice;
-
         // Очищаем старые префабы
-        foreach (Item item in FindObjectsOfType<Item>())
-        {
-            if (item.GetComponent<ItemSpawner>() == null)
-                Destroy(item.gameObject);
-        }
+        ClearExistingPrefabs();
 
-        // Создаем новые префабы
+        // Загружаем префабы
+        StartCoroutine(LoadPrefabsCoroutine(saveData));
+    }
+
+    private IEnumerator LoadPrefabsCoroutine(GameSaveData saveData)
+    {
+        // Ждем один кадр для стабилизации сцены
+        yield return null;
+
         foreach (SavedPrefab prefabData in saveData.prefabs)
         {
             GameObject prefab = availablePrefabs.Find(p =>
                 p.GetComponent<Item>().itemName == prefabData.prefabName);
 
-            if (prefab != null && defaultParent != null)
+            if (prefab != null && _spawnParent != null)
             {
                 GameObject instance = Instantiate(
                     prefab,
-                    defaultParent,
+                    _spawnParent,
                     false
                 );
 
                 instance.transform.localPosition = prefabData.position;
                 instance.transform.localEulerAngles = new Vector3(0, 0, prefabData.rotation);
                 instance.transform.localScale = prefabData.scale;
+
+                // Ждем небольшое время между созданием объектов
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+    }
+
+    private void ClearExistingPrefabs()
+    {
+        Item[] items = FindObjectsOfType<Item>();
+        foreach (Item item in items)
+        {
+            if (item.GetComponent<ItemSpawner>() == null)
+            {
+                Destroy(item.gameObject);
             }
         }
     }
