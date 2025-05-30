@@ -1,5 +1,9 @@
 using UnityEngine;
 using TMPro;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("Баланс")]
-    public float money = 1000f;
+    public float money = 1000f; // Стартовые деньги
     public TextMeshProUGUI moneyText;
 
     private void Awake()
@@ -15,12 +19,12 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+
         UpdateUI();
     }
 
@@ -29,6 +33,20 @@ public class GameManager : MonoBehaviour
         money += amount;
         UpdateUI();
         OnMoneyChanged?.Invoke();
+        ForceUpdateAllSpawners(); // Добавляем эту строку
+
+        ItemSpawner spawner = FindObjectOfType<ItemSpawner>();
+        if (spawner != null) spawner.ForceUpdatePrice();
+
+    }
+
+    private void ForceUpdateAllSpawners()
+    {
+        var spawners = FindObjectsOfType<ItemSpawner>();
+        foreach (var spawner in spawners)
+        {
+            spawner.UpdatePriceDisplay();
+        }
     }
 
     public bool TrySpendMoney(float amount)
@@ -48,9 +66,33 @@ public class GameManager : MonoBehaviour
         return money >= amount;
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         if (moneyText != null)
             moneyText.text = $"Деньги: {money:F1}$";
     }
+    private IEnumerator Start()
+    {
+        yield return new WaitForEndOfFrame();
+
+        // Инициализация UI и других систем
+        UpdateUI();
+
+        // Дополнительная загрузка, если нужно
+        if (SaveSystem.Instance != null &&
+            SceneManager.GetActiveScene().name == "GameArea")
+        {
+            SaveSystem.Instance.LoadGame();
+        }
+    }
+
+    [ContextMenu("Add Test Money")]
+    public void AddTestMoney()
+    {
+        money = 1000f; // Установите нужную сумму
+        UpdateUI();
+        Debug.Log($"Деньги установлены: {money}");
+    }
+
+
 }

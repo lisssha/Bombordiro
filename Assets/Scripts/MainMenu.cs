@@ -4,37 +4,53 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    private bool _isLoading = false;
+
     public void PlayGame()
     {
+        if (_isLoading) return;
+        _isLoading = true;
+
         StartCoroutine(LoadGameScene());
     }
 
     private IEnumerator LoadGameScene()
     {
-        SceneManager.LoadScene("GameArea");
-        yield return null; // Ждем завершения загрузки
+        // Загружаем сцену асинхронно
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameArea");
 
+        // Ждем завершения загрузки
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // Убеждаемся, что все объекты инициализированы
+        yield return new WaitForEndOfFrame();
+
+        // Загружаем сохранение
         if (SaveSystem.Instance != null)
         {
             SaveSystem.Instance.LoadGame();
         }
+
+        _isLoading = false;
     }
 
     public void BackToMenu()
     {
-        if (SaveSystem.Instance != null)
-        {
-            SaveSystem.Instance.SaveGame();
-        }
+        if (_isLoading) return;
+        _isLoading = true;
+
+        SaveSystem.Instance.SaveGame();
         SceneManager.LoadScene("Menu");
+
+        _isLoading = false;
     }
 
     public void ExitGame()
     {
-        if (SaveSystem.Instance != null)
-        {
-            SaveSystem.Instance.SaveGame();
-        }
+        SaveSystem.Instance.SaveGame();
         Application.Quit();
     }
 }
