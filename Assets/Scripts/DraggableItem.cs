@@ -223,18 +223,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         );
     }
 
-    public int GetEvolutionLevel()
-    {
-        // Возвращает уровень эволюции (0 для акулы, 1 для крокодила и т.д.)
-        if (evolutionData == null) return 0;
-        for (int i = 0; i < evolutionData.stages.Length; i++)
-        {
-            if (evolutionData.stages[i].prefab.name == gameObject.name.Replace("(Clone)", ""))
-                return i;
-        }
-        return 0;
-    }
-
     private void ShowFloatingText(string text)
     {
         // Реализация всплывающего текста (можно использовать TextMeshPro)

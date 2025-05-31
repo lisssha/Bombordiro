@@ -19,7 +19,6 @@ public class SavedPrefab
 
     // Компоненты
     public ItemData itemData;
-    public DraggableItemData draggableData;
     public MonetizableItemData monetizableData;
 }
 
@@ -29,11 +28,6 @@ public class ItemData
     public string itemName;
 }
 
-[System.Serializable]
-public class DraggableItemData
-{
-    public int evolutionLevel;
-}
 
 [System.Serializable]
 public class MonetizableItemData
