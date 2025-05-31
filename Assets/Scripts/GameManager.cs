@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         money += amount;
         UpdateUI();
         OnMoneyChanged?.Invoke();
-        ForceUpdateAllSpawners(); // Добавляем эту строку
+        ForceUpdateAllSpawners();
 
         ItemSpawner spawner = FindObjectOfType<ItemSpawner>();
         if (spawner != null) spawner.ForceUpdatePrice();

@@ -223,20 +223,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         );
     }
 
-    [Header("Доход")]
-    [SerializeField] public float clickReward = 1f; // Базовая награда за клик
-    [SerializeField] public float rewardMultiplier = 1.5f; // Множитель для эволюции
-
-    // Добавляем в конец класса:
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        float reward = clickReward * Mathf.Pow(rewardMultiplier, GetEvolutionLevel());
-        GameManager.Instance.AddMoney(reward);
-
-        // Визуальная обратная связь
-        ShowFloatingText($"+{reward:F1}$");
-    }
-
     public int GetEvolutionLevel()
     {
         // Возвращает уровень эволюции (0 для акулы, 1 для крокодила и т.д.)

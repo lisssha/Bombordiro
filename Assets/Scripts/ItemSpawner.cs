@@ -59,7 +59,6 @@ public class ItemSpawner : MonoBehaviour
         isSpawning = false;
     }
 
-    // В ItemSpawner.cs измените метод SpawnItem:
     private void SpawnItem()
     {
         Vector2 randomPos = GetRandomPosition();
