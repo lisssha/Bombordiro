@@ -64,10 +64,7 @@ public class ItemSpawner : MonoBehaviour
         Vector2 randomPos = GetRandomPosition();
         GameObject newItem = Instantiate(itemPrefab, spawnArea);
 
-        AchievementSystem.Instance?.CheckFirstCreation(
-            itemPrefab.GetComponent<Item>().itemName,
-            itemPrefab.GetComponent<Image>().sprite
-        );
+        
 
 
         // Устанавливаем стандартный масштаб

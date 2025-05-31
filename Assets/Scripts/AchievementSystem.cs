@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
 public class AchievementSystem : MonoBehaviour
 {
-    public static AchievementSystem Instance { get; private set; }
+    public static AchievementSystem Instance;
 
     [Header("UI Elements")]
     [SerializeField] private GameObject achievementPanel;
@@ -13,7 +14,7 @@ public class AchievementSystem : MonoBehaviour
     [SerializeField] private TMP_Text achievementText;
     [SerializeField] private float displayTime = 3f;
 
-    private Dictionary<string, bool> unlockedAchievements = new Dictionary<string, bool>();
+    private Dictionary<string, AchievementData> unlockedAchievements = new Dictionary<string, AchievementData>();
 
     private void Awake()
     {
@@ -29,20 +30,27 @@ public class AchievementSystem : MonoBehaviour
         }
     }
 
-    public void CheckFirstCreation(string prefabName, Sprite prefabSprite)
+    public void UnlockAchievement(string name, Sprite sprite)
     {
-        if (!unlockedAchievements.ContainsKey(prefabName))
+        if (unlockedAchievements.ContainsKey(name)) return;
+
+        // Создаем запись
+        var data = new AchievementData
         {
-            unlockedAchievements[prefabName] = true;
-            ShowAchievement($"Впервые создан {prefabName}", prefabSprite);
-            SaveAchievements();
-        }
+            name = name,
+            spritePath = sprite.name, // сохраняем имя спрайта
+            dateUnlocked = DateTime.Now.ToString("dd.MM.yyyy HH:mm")
+        };
+
+        unlockedAchievements[name] = data;
+        ShowAchievement(data, sprite);
+        SaveAchievements();
     }
 
-    private void ShowAchievement(string text, Sprite image)
+    private void ShowAchievement(AchievementData data, Sprite sprite)
     {
-        achievementText.text = text;
-        achievementImage.sprite = image;
+        achievementText.text = $"Впервые создан {data.name}";
+        achievementImage.sprite = sprite;
         achievementPanel.SetActive(true);
 
         CancelInvoke(nameof(HideAchievement));
@@ -56,19 +64,38 @@ public class AchievementSystem : MonoBehaviour
 
     private void SaveAchievements()
     {
-        List<string> keys = new List<string>(unlockedAchievements.Keys);
-        PlayerPrefs.SetString("UnlockedAchievements", string.Join(",", keys));
+        string json = JsonUtility.ToJson(new AchievementList(unlockedAchievements.Values));
+        PlayerPrefs.SetString("UnlockedAchievements", json);
+        PlayerPrefs.Save();
     }
 
     private void LoadAchievements()
     {
         if (PlayerPrefs.HasKey("UnlockedAchievements"))
         {
-            string[] keys = PlayerPrefs.GetString("UnlockedAchievements").Split(',');
-            foreach (string key in keys)
+            string json = PlayerPrefs.GetString("UnlockedAchievements");
+            var list = JsonUtility.FromJson<AchievementList>(json);
+            unlockedAchievements.Clear();
+            foreach (var ach in list.achievements)
             {
-                unlockedAchievements[key] = true;
+                unlockedAchievements[ach.name] = ach;
             }
+        }
+    }
+
+    public Dictionary<string, AchievementData> GetAllAchievements()
+    {
+        return unlockedAchievements;
+    }
+
+    [Serializable]
+    private class AchievementList
+    {
+        public List<AchievementData> achievements = new List<AchievementData>();
+
+        public AchievementList(IEnumerable<AchievementData> data)
+        {
+            achievements = new List<AchievementData>(data);
         }
     }
 }
