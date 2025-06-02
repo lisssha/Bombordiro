@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
     public void UpdateUI()
     {
         if (moneyText != null)
-            moneyText.text = $"Δενόγθ: {money:F1}$";
+            moneyText.text = $"{money:F1}$";
     }
     private IEnumerator Start()
     {

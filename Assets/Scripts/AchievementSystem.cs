@@ -49,7 +49,7 @@ public class AchievementSystem : MonoBehaviour
 
     private void ShowAchievement(AchievementData data, Sprite sprite)
     {
-        achievementText.text = $"Впервые создан {data.name}";
+        achievementText.text = $"Achievement unlocked!\nThe first {data.name} was created!";
         achievementImage.sprite = sprite;
         achievementPanel.SetActive(true);
 
