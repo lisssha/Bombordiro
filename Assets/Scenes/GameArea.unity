@@ -1558,9 +1558,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd251919c1d095428361e8bd5673b62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementPanel: {fileID: 0}
-  achievementImage: {fileID: 0}
-  achievementText: {fileID: 0}
+  achievementPanel: {fileID: 915522697}
+  achievementImage: {fileID: 855910001}
+  achievementText: {fileID: 1453912084}
   displayTime: 3
 --- !u!4 &1497475711
 Transform:

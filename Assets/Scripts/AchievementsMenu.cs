@@ -16,12 +16,6 @@ public class AchievementsMenu : MonoBehaviour
 
     public void OpenAchievements()
     {
-        if (window == null || contentParent == null || achievementEntryPrefab == null)
-        {
-            Debug.LogError("AchievementsMenu не настроен: одно из полей пустое!");
-            return;
-        }
-
         window.SetActive(true);
         PopulateAchievements();
     }
