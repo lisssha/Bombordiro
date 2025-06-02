@@ -34,30 +34,33 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
 
     private void ShowFloatingText(string value, Color color)
     {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogWarning("GameManager.Instance is null");
+        if (GameManager.Instance == null ||
+            GameManager.Instance.worldCanvas == null ||
+            GameManager.Instance.floatingTextPrefab == null)
             return;
-        }
 
-        if (GameManager.Instance.worldCanvas == null)
-        {
-            Debug.LogWarning("GameManager.Instance.worldCanvas is null");
-            return;
-        }
+        // Ёкранна€ позици€ мыши (где был клик)
+        Vector2 screenPos = Input.mousePosition;
 
-        if (GameManager.Instance.floatingTextPrefab == null)
-        {
-            Debug.LogWarning("floatingTextPrefab is null in GameManager");
-            return;
-        }
+        // ѕереводим экранные координаты в мировые (в Canvas)
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            GameManager.Instance.worldCanvas.GetComponent<RectTransform>(),
+            screenPos,
+            Camera.main,
+            out Vector3 worldPos
+        );
 
-        Vector3 screenPos = Input.mousePosition;
-        GameObject ft = Instantiate(GameManager.Instance.floatingTextPrefab, screenPos, Quaternion.identity, GameManager.Instance.floatingTextParent.transform);
-
+        // —оздаЄм объект во worldCanvas в нужной позиции
+        GameObject ft = Instantiate(
+            GameManager.Instance.floatingTextPrefab,
+            worldPos,
+            Quaternion.identity,
+            GameManager.Instance.floatingTextParent.transform
+        );
 
         FloatingText floatingText = ft.GetComponent<FloatingText>();
         floatingText.SetText(value, color);
     }
+
 
 }
