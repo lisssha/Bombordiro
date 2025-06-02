@@ -17,14 +17,19 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
     {
         float reward = baseReward * Mathf.Pow(rewardMultiplier, evolutionLevel);
         GameManager.Instance.AddMoney(reward);
-        ShowFloatingText($"+{reward:F1}$", Color.white);
+
+        
 
         // Шанс выпадения алмазиков (5%)
         if (Random.value < 0.05f)
         {
             int gemsEarned = Mathf.Max(1, evolutionLevel + 1); // 1 для первой стадии
             GameManager.Instance.AddGems(gemsEarned);
-            ShowFloatingText($"+{gemsEarned}", Color.blue);
+            ShowFloatingText($"+{gemsEarned} +{reward:F1}", Color.blue);
+        }
+        else
+        {
+            ShowFloatingText($"+{reward:F1}$", Color.white);
         }
     }
     public void SetEvolutionLevel(int level)
