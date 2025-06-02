@@ -39,28 +39,34 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
             GameManager.Instance.floatingTextPrefab == null)
             return;
 
-        // Ёкранна€ позици€ мыши (где был клик)
-        Vector2 screenPos = Input.mousePosition;
+        // 1. ѕолучаем экранную позицию (куда кликнули/где животное)
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(transform.position);
 
-        // ѕереводим экранные координаты в мировые (в Canvas)
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            GameManager.Instance.worldCanvas.GetComponent<RectTransform>(),
+        // 2. ѕереводим экранную позицию в локальную позицию внутри Canvas
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            GameManager.Instance.floatingTextParent.GetComponent<RectTransform>(),
             screenPos,
-            Camera.main,
-            out Vector3 worldPos
+            null, // null, потому что Overlay-режим Ч камера не используетс€
+            out Vector2 localPoint
         );
 
-        // —оздаЄм объект во worldCanvas в нужной позиции
+        // 3. —оздаЄм текст и устанавливаем его локальную позицию
         GameObject ft = Instantiate(
             GameManager.Instance.floatingTextPrefab,
-            worldPos,
-            Quaternion.identity,
             GameManager.Instance.floatingTextParent.transform
         );
 
+        ft.GetComponent<RectTransform>().anchoredPosition = localPoint;
+        
         FloatingText floatingText = ft.GetComponent<FloatingText>();
         floatingText.SetText(value, color);
     }
+
+
+
+
+
+
 
 
 }
