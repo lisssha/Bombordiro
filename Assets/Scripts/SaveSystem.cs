@@ -137,6 +137,7 @@ public class SaveSystem : MonoBehaviour
         PlayerPrefs.DeleteKey("CurrentSpawnPrice");
         PlayerPrefs.DeleteKey("PlayerMoney");
         PlayerPrefs.DeleteKey("UnlockedAchievements");
+        PlayerPrefs.DeleteKey("PlayerGems");
         PlayerPrefs.Save();
         Debug.Log("Все сохранения сброшены!");
     }

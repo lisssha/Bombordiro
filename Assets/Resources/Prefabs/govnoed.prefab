@@ -133,8 +133,6 @@ MonoBehaviour:
     prefab: {fileID: 0}
     mergeSound: {fileID: 0}
     nextStage: {fileID: 0}
-  clickReward: 1
-  rewardMultiplier: 1.5
 --- !u!61 &7315827881662622650
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -195,3 +193,5 @@ MonoBehaviour:
   baseReward: 20
   rewardMultiplier: 1.1
   evolutionLevel: 0
+  floatingTextPrefab: {fileID: 3565330966169750219, guid: 63d44e1a1746c444eb72cca3b2f0262e, type: 3}
+  worldCanvas: {fileID: 0}
