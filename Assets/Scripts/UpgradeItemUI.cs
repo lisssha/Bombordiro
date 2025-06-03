@@ -37,6 +37,8 @@ public class UpgradeItemUI : MonoBehaviour
 
     public void Init(string key, string name, int baseCost, float costMultiplier)
     {
+        Debug.Log($"Init called: {name}");
+
         this.upgradeKey = key;
         this.upgradeName = name;
         this.baseCost = baseCost;
@@ -46,7 +48,7 @@ public class UpgradeItemUI : MonoBehaviour
         UpdateUI();
     }
 
-    void UpdateUI()
+    public void UpdateUI()
     {
         int cost = GetCurrentCost();
 
@@ -72,6 +74,8 @@ public class UpgradeItemUI : MonoBehaviour
             PlayerPrefs.SetInt(upgradeKey, currentLevel);
             UpdateUI();
             ApplyEffect();
+
+            UpgradeShopUI.Instance?.UpdateAllItems();
         }
     }
 

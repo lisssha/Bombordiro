@@ -88,6 +88,8 @@ public class GameManager : MonoBehaviour
     {
         gems += amount;
         UpdateUI();
+
+        UpgradeShopUI.Instance?.UpdateAllItems(); //
     }
 
     public bool TrySpendGems(int amount)
