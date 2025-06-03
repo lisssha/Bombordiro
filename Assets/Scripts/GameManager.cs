@@ -123,9 +123,9 @@ public class GameManager : MonoBehaviour
     public void UpdateUI()
     {
         if (moneyText != null)
-            moneyText.text = $"{money:F1}$";
+            moneyText.text = $"{money:F1}";
         if (gemsText != null)
-            gemsText.text = $"{gems}&";
+            gemsText.text = $"{gems}";
 
     }
     private IEnumerator Start()

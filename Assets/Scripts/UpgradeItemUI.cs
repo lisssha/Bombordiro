@@ -60,7 +60,7 @@ public class UpgradeItemUI : MonoBehaviour
 
         nameText.text = upgradeName;
         levelText.text = $"Level: {currentLevel}";
-        costText.text = $"Price: {cost}&";
+        costText.text = $"Price: {cost}";
 
         upgradeButton.interactable = GameManager.Instance.gems >= cost;
 

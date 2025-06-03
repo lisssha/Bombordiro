@@ -113,7 +113,7 @@ public class ItemSpawner : MonoBehaviour
     public void UpdatePriceDisplay()
     {
         // Всегда обновляем текст и состояние кнопки
-        priceText.text = $"{currentPrice:F1}$";
+        priceText.text = $"{currentPrice:F1}";
         spawnButton.interactable = GameManager.Instance.CanAfford(currentPrice);
 
         // Добавьте лог для отладки
