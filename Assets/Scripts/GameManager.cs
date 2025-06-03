@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI gemsText; // Привяжи к UI
 
 
+    
+
     private void Awake()
     {
         if (Instance == null)

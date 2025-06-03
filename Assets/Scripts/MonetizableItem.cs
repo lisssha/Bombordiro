@@ -12,10 +12,10 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] public Canvas worldCanvas; // Привяжи World-Space Canvas
 
-
+    public float ClickIncomeMultiplier => 1f + PlayerPrefs.GetInt("click_income", 0);
     public void OnPointerClick(PointerEventData eventData)
     {
-        float reward = baseReward * Mathf.Pow(rewardMultiplier, evolutionLevel);
+        float reward = baseReward * Mathf.Pow(rewardMultiplier, evolutionLevel) * ClickIncomeMultiplier;
         GameManager.Instance.AddMoney(reward);
 
         
@@ -23,7 +23,7 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
         // Шанс выпадения алмазиков (5%)
         if (Random.value < 0.05f)
         {
-            int gemsEarned = Mathf.Max(1, evolutionLevel + 1);
+            int gemsEarned = 1 + PlayerPrefs.GetInt("click_income", 0);
             GameManager.Instance.AddGems(gemsEarned);
             ShowFloatingText($"+{reward:F1}$", Color.blue);
         }
