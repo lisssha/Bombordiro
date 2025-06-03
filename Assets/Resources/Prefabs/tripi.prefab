@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9048048415596463805
+--- !u!1 &9121858748887579638
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,28 +8,28 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7477414096914729007}
-  - component: {fileID: 8754074587769378248}
-  - component: {fileID: 1345094103174566207}
-  - component: {fileID: 5589790075656456922}
-  - component: {fileID: 8337194991580394828}
-  - component: {fileID: -7524612487868070072}
-  - component: {fileID: -3779070809136117607}
-  - component: {fileID: -7772870285082604425}
+  - component: {fileID: 7986571400197151958}
+  - component: {fileID: 8505345206699327322}
+  - component: {fileID: 2875632823848114646}
+  - component: {fileID: -2709917012644387585}
+  - component: {fileID: 6899984156462938560}
+  - component: {fileID: 2122960719603618260}
+  - component: {fileID: 7315827881662622650}
+  - component: {fileID: 8083618155120744922}
   m_Layer: 5
-  m_Name: bombo
+  m_Name: tripi
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &7477414096914729007
+--- !u!224 &7986571400197151958
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,26 +37,26 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.45714292, y: 0.42987952}
-  m_AnchorMax: {x: 0.54114294, y: 0.57370687}
+  m_AnchorMin: {x: 0.45677194, y: 0.41629317}
+  m_AnchorMax: {x: 0.54311407, y: 0.5838274}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 2, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8754074587769378248
+--- !u!222 &8505345206699327322
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
   m_CullTransparentMesh: 1
---- !u!114 &1345094103174566207
+--- !u!114 &2875632823848114646
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8426cf20621b01640abfb90eb323e535, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b2821e2271360c64395194ac9548811f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -80,25 +80,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!225 &5589790075656456922
+--- !u!225 &-2709917012644387585
 CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &8337194991580394828
+--- !u!114 &6899984156462938560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eefe9e0ca0373484dbd379e5b3c4aab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: tripi
+--- !u!114 &2122960719603618260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121858748887579638}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00670292067317348814b63af595f14e, type: 3}
@@ -120,26 +133,13 @@ MonoBehaviour:
     prefab: {fileID: 0}
     mergeSound: {fileID: 0}
     nextStage: {fileID: 0}
---- !u!114 &-7524612487868070072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eefe9e0ca0373484dbd379e5b3c4aab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemName: bombo
---- !u!61 &-3779070809136117607
+--- !u!61 &7315827881662622650
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -178,19 +178,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-7772870285082604425
+--- !u!114 &8083618155120744922
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9048048415596463805}
+  m_GameObject: {fileID: 9121858748887579638}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c002d1c3ee363440881784aced7a5fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseReward: 35
+  baseReward: 150
   rewardMultiplier: 1.1
   evolutionLevel: 0
   worldCanvas: {fileID: 0}

@@ -50,7 +50,6 @@ public class MainMenu : MonoBehaviour
 
     public void ExitGame()
     {
-        SaveSystem.Instance.SaveGame();
         Application.Quit();
     }
 
