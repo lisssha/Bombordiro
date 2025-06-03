@@ -53,6 +53,7 @@ public class UpgradeShopUI : MonoBehaviour
     {
         bool isActive = upgradePanelObject.activeSelf;
         upgradePanelObject.SetActive(!isActive);
+        UpgradeItemUI.Instance.UpdateUI();
     }
 
     public void OpenPanel()

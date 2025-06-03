@@ -159,4 +159,30 @@ public class ItemSpawner : MonoBehaviour
     }
 
 
+    public int GetMaxSpawnedPrefabIndex()
+    {
+        int maxIndex = -1;
+
+        // Получаем все объекты с компонентом Item
+        Item[] itemsOnScene = FindObjectsOfType<Item>();
+
+        foreach (var item in itemsOnScene)
+        {
+            string name = item.gameObject.name.Replace("(Clone)", "").Trim();
+
+            // Ищем соответствие в массиве префабов
+            for (int i = 0; i < spawnPrefabs.Length; i++)
+            {
+                if (spawnPrefabs[i].name == name)
+                {
+                    if (i > maxIndex)
+                        maxIndex = i;
+                }
+            }
+        }
+
+        return maxIndex;
+    }
+
+
 }

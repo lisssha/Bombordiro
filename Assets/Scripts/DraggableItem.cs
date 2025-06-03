@@ -181,6 +181,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
             // Воспроизводим звук слияния
             PlayMergeSound();
+
         }
 
         StartCoroutine(DestroyAfterDelay(other));

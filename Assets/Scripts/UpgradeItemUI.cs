@@ -4,6 +4,8 @@ using TMPro;
 
 public class UpgradeItemUI : MonoBehaviour
 {
+    public static UpgradeItemUI Instance;
+
     [Header("UI")]
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI levelText;
@@ -18,9 +20,13 @@ public class UpgradeItemUI : MonoBehaviour
 
     private int currentLevel;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
-        // Найдём все нужные компоненты (если не привязаны через инспектор)
         var texts = GetComponentsInChildren<TextMeshProUGUI>(true);
         foreach (var txt in texts)
         {
@@ -32,7 +38,7 @@ public class UpgradeItemUI : MonoBehaviour
         upgradeButton = GetComponentInChildren<Button>(true);
         upgradeButton.onClick.AddListener(BuyUpgrade);
 
-        UpdateUI(); // можно вызвать ещё раз здесь
+        UpdateUI();
     }
 
     public void Init(string key, string name, int baseCost, float costMultiplier)
@@ -57,6 +63,18 @@ public class UpgradeItemUI : MonoBehaviour
         costText.text = $"Price: {cost}&";
 
         upgradeButton.interactable = GameManager.Instance.gems >= cost;
+
+        //if (upgradeKey == "spawn_upgrade")
+        //{
+        //    ItemSpawner spawner = FindObjectOfType<ItemSpawner>();
+        //    int maxAvailableLevel = spawner.GetMaxSpawnedPrefabIndex();
+        //
+        //    if (currentLevel >= maxAvailableLevel)
+        //   {
+        //        upgradeButton.interactable = false;
+        //        Debug.Log($"Прокачка {upgradeKey} заблокирована. Максимальный уровень: {maxAvailableLevel}");
+        //    }
+        //}
     }
 
     int GetCurrentCost()
@@ -66,6 +84,18 @@ public class UpgradeItemUI : MonoBehaviour
 
     void BuyUpgrade()
     {
+        if (upgradeKey == "spawn_upgrade")
+        {
+            ItemSpawner spawner = FindObjectOfType<ItemSpawner>();
+            int maxAvailableLevel = spawner.GetMaxSpawnedPrefabIndex();
+
+            if (currentLevel + 1 > maxAvailableLevel)
+            {
+                Debug.Log($"Нельзя прокачать выше уровня {maxAvailableLevel}. Сначала получи животное через слияние.");
+                return;
+            }
+        }
+
         int cost = GetCurrentCost();
 
         if (GameManager.Instance.TrySpendGems(cost))
