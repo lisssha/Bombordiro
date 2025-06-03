@@ -23,6 +23,8 @@ public class ItemSpawner : MonoBehaviour
     private GameManager gameManager;
     private bool isSpawning = false;
 
+    
+
     private void Start()
     {
         gameManager = GameManager.Instance;
@@ -61,22 +63,24 @@ public class ItemSpawner : MonoBehaviour
 
     private void SpawnItem()
     {
+        int upgradeLevel = GetSpawnUpgradeLevel();
+        Debug.Log($"upgradeLevel: {upgradeLevel}");
+        int prefabIndex = Mathf.Clamp(upgradeLevel, 0, spawnPrefabs.Length - 1);
+        Debug.Log($"prefabIndex: {prefabIndex}");
+        GameObject selectedPrefab = spawnPrefabs[prefabIndex];
+
         Vector2 randomPos = GetRandomPosition();
-        GameObject newItem = Instantiate(itemPrefab, spawnArea);
+        GameObject newItem = Instantiate(selectedPrefab, spawnArea);
 
-        
-
-
-        // Устанавливаем стандартный масштаб
         newItem.GetComponent<RectTransform>().localScale = Vector3.one;
         newItem.GetComponent<RectTransform>().anchoredPosition = randomPos;
 
-        // Добавляем компонент для заработка
         if (!newItem.TryGetComponent<MonetizableItem>(out _))
         {
             newItem.AddComponent<MonetizableItem>().baseReward = 1f;
         }
     }
+
 
     private Vector2 GetRandomPosition()
     {
@@ -145,4 +149,14 @@ public class ItemSpawner : MonoBehaviour
     {
         GameManager.OnMoneyChanged -= UpdatePriceDisplay;
     }
+
+    [Header("Префабы")]
+    public GameObject[] spawnPrefabs;
+
+    private int GetSpawnUpgradeLevel()
+    {
+        return PlayerPrefs.GetInt("spawn_upgrade", 0); // по умолчанию 0
+    }
+
+
 }
