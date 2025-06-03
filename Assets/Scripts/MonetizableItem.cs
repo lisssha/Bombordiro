@@ -23,9 +23,9 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
         // Шанс выпадения алмазиков (5%)
         if (Random.value < 0.05f)
         {
-            int gemsEarned = Mathf.Max(1, evolutionLevel + 1); // 1 для первой стадии
+            int gemsEarned = Mathf.Max(1, evolutionLevel + 1);
             GameManager.Instance.AddGems(gemsEarned);
-            ShowFloatingText($"+{gemsEarned} +{reward:F1}", Color.blue);
+            ShowFloatingText($"+{reward:F1}$", Color.blue);
         }
         else
         {

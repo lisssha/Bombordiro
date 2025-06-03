@@ -133,11 +133,7 @@ public class SaveSystem : MonoBehaviour
     [ContextMenu("Reset Saves")]
     public void ResetAllSaves()
     {
-        PlayerPrefs.DeleteKey("GameSave");
-        PlayerPrefs.DeleteKey("CurrentSpawnPrice");
-        PlayerPrefs.DeleteKey("PlayerMoney");
-        PlayerPrefs.DeleteKey("UnlockedAchievements");
-        PlayerPrefs.DeleteKey("PlayerGems");
+        PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
         Debug.Log("Все сохранения сброшены!");
     }
