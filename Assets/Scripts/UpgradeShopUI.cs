@@ -45,4 +45,23 @@ public class UpgradeShopUI : MonoBehaviour
         foreach (var item in upgradeItems)
             item.UpdateUI();
     }
+
+
+    public GameObject upgradePanelObject; // —юда передаЄм саму UpgradePanel
+
+    public void TogglePanel()
+    {
+        bool isActive = upgradePanelObject.activeSelf;
+        upgradePanelObject.SetActive(!isActive);
+    }
+
+    public void OpenPanel()
+    {
+        upgradePanelObject.SetActive(true);
+    }
+
+    public void ClosePanel()
+    {
+        upgradePanelObject.SetActive(false);
+    }
 }
