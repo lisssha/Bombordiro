@@ -140,14 +140,13 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (currentStage == null)
         {
             Debug.LogWarning("Evolution stage not found!");
-            FindCurrentEvolutionStage(); // Попробуем найти снова
+            FindCurrentEvolutionStage();
             if (currentStage == null) return;
         }
 
-        // Ищем все коллайдеры в радиусе
         Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(
             transform.position,
-            mergeDistance * canvas.scaleFactor // Учитываем масштаб канваса
+            mergeDistance * canvas.scaleFactor
         );
 
         foreach (var collider in nearbyColliders)
@@ -158,7 +157,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (otherItem != null && otherItem.itemName == thisItem.itemName)
             {
                 MergeItems(otherItem.gameObject);
-                return; // Выходим после первого слияния
+                return;
             }
         }
     }
@@ -176,10 +175,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 canvas.transform
             );
 
-            // Фиксируем масштаб
             newItem.GetComponent<RectTransform>().localScale = Vector3.one;
 
-            // Воспроизводим звук слияния
             PlayMergeSound();
 
         }
@@ -224,8 +221,4 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         );
     }
 
-    private void ShowFloatingText(string text)
-    {
-        // Реализация всплывающего текста (можно использовать TextMeshPro)
-    }
 }

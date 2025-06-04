@@ -16,19 +16,15 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator LoadGameScene()
     {
-        // Загружаем сцену асинхронно
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameArea");
 
-        // Ждем завершения загрузки
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
 
-        // Убеждаемся, что все объекты инициализированы
         yield return new WaitForEndOfFrame();
 
-        // Загружаем сохранение
         if (SaveSystem.Instance != null)
         {
             SaveSystem.Instance.LoadGame();

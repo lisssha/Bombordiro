@@ -34,11 +34,10 @@ public class AchievementSystem : MonoBehaviour
     {
         if (unlockedAchievements.ContainsKey(name)) return;
 
-        // Создаем запись
         var data = new AchievementData
         {
             name = name,
-            spritePath = sprite.name, // сохраняем имя спрайта
+            spritePath = sprite.name,
             dateUnlocked = DateTime.Now.ToString("dd.MM.yyyy HH:mm")
         };
 

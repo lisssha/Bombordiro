@@ -28,7 +28,6 @@ public class ItemSpawner : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
-        // currentPrice теперь загружается автоматически через свойство
 
         spawnButton.onClick.RemoveAllListeners();
         spawnButton.onClick.AddListener(TrySpawnItem);
@@ -87,7 +86,6 @@ public class ItemSpawner : MonoBehaviour
         RectTransform prefabRect = itemPrefab.GetComponent<RectTransform>();
         Vector2 spawnSize = spawnArea.rect.size;
 
-        // Учитываем pivot префаба
         Vector2 pivotOffset = new Vector2(
             prefabRect.pivot.x * prefabRect.rect.width,
             prefabRect.pivot.y * prefabRect.rect.height
@@ -112,11 +110,9 @@ public class ItemSpawner : MonoBehaviour
 
     public void UpdatePriceDisplay()
     {
-        // Всегда обновляем текст и состояние кнопки
         priceText.text = $"{currentPrice:F1}";
         spawnButton.interactable = GameManager.Instance.CanAfford(currentPrice);
 
-        // Добавьте лог для отладки
         Debug.Log($"Price updated: {currentPrice}");
     }
     private IEnumerator ShakeButton()
@@ -155,7 +151,7 @@ public class ItemSpawner : MonoBehaviour
 
     private int GetSpawnUpgradeLevel()
     {
-        return PlayerPrefs.GetInt("spawn_upgrade", 0); // по умолчанию 0
+        return PlayerPrefs.GetInt("spawn_upgrade", 0);
     }
 
 
@@ -163,14 +159,12 @@ public class ItemSpawner : MonoBehaviour
     {
         int maxIndex = -1;
 
-        // Получаем все объекты с компонентом Item
         Item[] itemsOnScene = FindObjectsOfType<Item>();
 
         foreach (var item in itemsOnScene)
         {
             string name = item.gameObject.name.Replace("(Clone)", "").Trim();
 
-            // Ищем соответствие в массиве префабов
             for (int i = 0; i < spawnPrefabs.Length; i++)
             {
                 if (spawnPrefabs[i].name == name)

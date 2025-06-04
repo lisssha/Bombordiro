@@ -8,7 +8,7 @@ public class SaveSystem : MonoBehaviour
     public static SaveSystem Instance { get; private set; }
 
     [SerializeField] private List<GameObject> availablePrefabs;
-    [SerializeField] private string spawnParentName = "SpawnArena"; // Перетащите сюда SpawnArena из иерархии
+    [SerializeField] private string spawnParentName = "SpawnArena";
 
     private Transform _spawnParent;
 
@@ -28,7 +28,6 @@ public class SaveSystem : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Находим родительский объект при каждой загрузке сцены
         GameObject parentObj = GameObject.Find(spawnParentName);
         _spawnParent = parentObj != null ? parentObj.transform : null;
     }
@@ -49,7 +48,7 @@ public class SaveSystem : MonoBehaviour
             saveData.prefabs.Add(new SavedPrefab
             {
                 prefabName = item.itemName,
-                position = item.transform.localPosition, // Используем localPosition
+                position = item.transform.localPosition,
                 rotation = item.transform.localEulerAngles.z,
                 scale = item.transform.localScale
             });
@@ -64,7 +63,6 @@ public class SaveSystem : MonoBehaviour
     {
         if (!PlayerPrefs.HasKey("GameSave")) return;
 
-        // Убеждаемся, что родительский объект найден
         if (_spawnParent == null)
         {
             GameObject parentObj = GameObject.Find(spawnParentName);
@@ -82,10 +80,8 @@ public class SaveSystem : MonoBehaviour
 
         GameManager.Instance.money = PlayerPrefs.GetFloat("PlayerMoney", saveData.money);
 
-        // Очищаем старые префабы
         ClearExistingPrefabs();
 
-        // Загружаем префабы
         StartCoroutine(LoadPrefabsCoroutine(saveData));
     }
 
@@ -111,7 +107,7 @@ public class SaveSystem : MonoBehaviour
                 instance.transform.localEulerAngles = new Vector3(0, 0, prefabData.rotation);
                 instance.transform.localScale = prefabData.scale;
 
-                // Ждем небольшое время между созданием объектов
+                // Ждем время между созданием объектов
                 yield return new WaitForSeconds(0.01f);
             }
         }
@@ -129,12 +125,18 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    // Метод для сброса всех сохранений
     [ContextMenu("Reset Saves")]
     public void ResetAllSaves()
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
         Debug.Log("Все сохранения сброшены!");
+    }
+
+    public void ResetAllSavesForButton()
+    {
+        SceneManager.LoadScene("Menu");
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
     }
 }

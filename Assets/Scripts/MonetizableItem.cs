@@ -10,7 +10,7 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private int evolutionLevel = 0;
 
-    [SerializeField] public Canvas worldCanvas; // Привяжи World-Space Canvas
+    [SerializeField] public Canvas worldCanvas;
 
     public float ClickIncomeMultiplier => 1f + PlayerPrefs.GetInt("click_income", 0);
     public void OnPointerClick(PointerEventData eventData)
@@ -18,9 +18,7 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
         float reward = baseReward * Mathf.Pow(rewardMultiplier, evolutionLevel) * ClickIncomeMultiplier;
         GameManager.Instance.AddMoney(reward);
 
-        
-
-        // Шанс выпадения алмазиков (5%)
+        // Шанс выпадения алмазов
         if (Random.value < 0.05f)
         {
             int gemsEarned = 1 + PlayerPrefs.GetInt("click_income", 0);
@@ -44,14 +42,14 @@ public class MonetizableItem : MonoBehaviour, IPointerClickHandler
             GameManager.Instance.floatingTextPrefab == null)
             return;
 
-        // 1. Получаем экранную позицию (куда кликнули/где животное)
+        // 1. Получаем экранную позицию
         Vector2 screenPos = Camera.main.WorldToScreenPoint(transform.position);
 
         // 2. Переводим экранную позицию в локальную позицию внутри Canvas
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             GameManager.Instance.floatingTextParent.GetComponent<RectTransform>(),
             screenPos,
-            null, // null, потому что Overlay-режим — камера не используется
+            null,
             out Vector2 localPoint
         );
 

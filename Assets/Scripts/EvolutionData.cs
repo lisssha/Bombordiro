@@ -6,12 +6,12 @@ public class EvolutionData : ScriptableObject
     [System.Serializable]
     public class EvolutionStage
     {
-        public GameObject prefab;      // Префаб животного (акула, крокодил...)
-        public AudioClip mergeSound;  // Звук при слиянии
-        public GameObject nextStage;   // Во что эволюционирует
+        public GameObject prefab;
+        public AudioClip mergeSound;
+        public GameObject nextStage;
     }
 
-    public EvolutionStage[] stages;    // Все ступени эволюции
+    public EvolutionStage[] stages;
 
     public EvolutionStage GetStageForPrefab(GameObject obj)
     {

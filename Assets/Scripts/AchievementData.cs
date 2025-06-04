@@ -4,6 +4,6 @@ using System;
 public class AchievementData
 {
     public string name;
-    public string spritePath; // путь к спрайту ресурса
+    public string spritePath;
     public string dateUnlocked;
 }

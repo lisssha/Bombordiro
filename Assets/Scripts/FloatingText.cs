@@ -11,7 +11,7 @@ public class FloatingText : MonoBehaviour
     {
         textMesh.text = value;
         textMesh.color = color;
-        animator.Play("FloatingText"); // Название твоего аниматора. Убедись, что оно такое.
+        animator.Play("FloatingText");
     }
 
     // Этот метод вызывается в конце анимации через Animation Event

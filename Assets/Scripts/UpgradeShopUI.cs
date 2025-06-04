@@ -47,7 +47,7 @@ public class UpgradeShopUI : MonoBehaviour
     }
 
 
-    public GameObject upgradePanelObject; // —юда передаЄм саму UpgradePanel
+    public GameObject upgradePanelObject;
 
     public void TogglePanel()
     {

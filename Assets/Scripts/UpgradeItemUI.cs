@@ -112,7 +112,6 @@ public class UpgradeItemUI : MonoBehaviour
     void ApplyEffect()
     {
         Debug.Log($"Улучшение '{upgradeName}' применено. Новый уровень: {currentLevel}");
-        // Тут можешь вызывать, например:
-        // UpgradeManager.Instance.ApplyUpgrade(upgradeKey, currentLevel);
+        // Надо будет сделать эффект при покупке улучшения
     }
 }

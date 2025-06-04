@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("UI")]
-    public Canvas worldCanvas; // Сюда перетащим канвас с FloatingText
+    public Canvas worldCanvas;
     public GameObject floatingTextPrefab;
     public GameObject floatingTextParent;
 
@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         set
         {
             _money = value;
-            PlayerPrefs.SetFloat("PlayerMoney", value); // Автосохранение
+            PlayerPrefs.SetFloat("PlayerMoney", value);
             UpdateUI();
             OnMoneyChanged?.Invoke();
         }
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
             UpdateUI();
         }
     }
-    public TextMeshProUGUI gemsText; // Привяжи к UI
+    public TextMeshProUGUI gemsText;
 
 
     
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            _money = PlayerPrefs.GetFloat("PlayerMoney", 1000f); // Загрузка при старте
+            _money = PlayerPrefs.GetFloat("PlayerMoney", 1000f);
             _gems = PlayerPrefs.GetInt("PlayerGems", 0);
         }
         else
@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
         gems += amount;
         UpdateUI();
 
-        UpgradeShopUI.Instance?.UpdateAllItems(); //
+        UpgradeShopUI.Instance?.UpdateAllItems();
     }
 
     public bool TrySpendGems(int amount)
@@ -132,10 +132,8 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        // Инициализация UI и других систем
         UpdateUI();
 
-        // Дополнительная загрузка, если нужно
         if (SaveSystem.Instance != null &&
             SceneManager.GetActiveScene().name == "GameArea")
         {
@@ -146,7 +144,7 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Add Test Money")]
     public void AddTestMoney()
     {
-        money = 1000f; // Установите нужную сумму
+        money = 1000f;
         UpdateUI();
         Debug.Log($"Деньги установлены: {money}");
     }
